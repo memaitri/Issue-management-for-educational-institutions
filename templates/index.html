@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h2>Issue Management System</h2>
+            <nav>
+                <a href="{{ url_for('login') }}" class="btn">Login</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="home-container">
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1>Welcome to Issue Management System</h1>
+                <p class="hero-description">A centralized platform for managing and tracking institutional issues efficiently. Streamline your issue reporting and resolution process with our comprehensive system.</p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('login') }}" class="btn btn-primary">Get Started</a>
+                </div>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Easy Issue Tracking</h3>
+                    <p>Track and manage issues in real-time with our intuitive interface</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Role-Based Access</h3>
+                    <p>Secure access for students, faculty, and administrators</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Status Updates</h3>
+                    <p>Real-time updates on issue resolution progress</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Quick Resolution</h3>
+                    <p>Efficient process for faster issue resolution</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

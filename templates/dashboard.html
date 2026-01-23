@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Issue Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h2>Dashboard</h2>
+            <nav>
+                <a href="{{ url_for('report_issue') }}" class="btn">Report Issue</a>
+                <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="issues-list">
+            <h3 style="margin-bottom: 1.5rem;">Your Issues</h3>
+            {% if issues %}
+                {% for issue in issues %}
+                    <div class="issue-card">
+                        <h4>{{ issue.title }}</h4>
+                        <p>{{ issue.description }}</p>
+                        <div class="issue-meta">
+                            <span>Type: {{ issue.type }}</span>
+                            <span class="status-{{ issue.status }}">Status: {{ issue.status }}</span>
+                            <span>Date: {{ issue.created_at.strftime('%Y-%m-%d') }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="issue-card" style="text-align: center;">
+                    <p>No issues found. Click "Report Issue" to create a new issue.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

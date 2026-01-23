@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Issue - Issue Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h2>Report New Issue</h2>
+            <nav>
+                <a href="{{ url_for('dashboard') }}" class="btn">Back to Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container dashboard-container">
+        <div class="welcome-banner">
+            <h3>Submit a New Issue</h3>
+            <p>Please provide detailed information about your issue to help us resolve it efficiently</p>
+        </div>
+
+        <div class="issues-list">
+            <form method="POST" class="report-form">
+                <div class="form-group">
+                    <label for="title">Issue Title</label>
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="title" 
+                            name="title" 
+                            required 
+                            placeholder="Enter a clear, concise title for your issue"
+                            class="form-input"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <div class="input-group">
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            required 
+                            placeholder="Provide detailed information about your issue"
+                            class="form-input"
+                            rows="6"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Issue Type</label>
+                    <div class="input-group">
+                        <select id="type" name="type" required class="form-input">
+                            <option value="">Select issue type</option>
+                            <option value="technical">Technical Issue</option>
+                            <option value="academic">Academic Matter</option>
+                            <option value="facility">Facility Concern</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Submit Issue</button>
+                    <a href="{{ url_for('dashboard') }}" class="btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

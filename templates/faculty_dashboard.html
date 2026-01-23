@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard - Issue Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h2>Faculty Dashboard</h2>
+            <nav>
+                <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container dashboard-container">
+        <div class="welcome-banner">
+            <h3>Welcome, {{ current_user.username }}!</h3>
+            <p>Review and manage student issues efficiently</p>
+        </div>
+
+        <div class="admin-stats">
+            <div class="stat-card">
+                <h4>Total Active Issues</h4>
+                <p>{{ issues|length }}</p>
+            </div>
+            <div class="stat-card">
+                <h4>Pending Review</h4>
+                <p>{{ issues|selectattr('status', 'equalto', 'pending')|list|length }}</p>
+            </div>
+            <div class="stat-card">
+                <h4>In Progress</h4>
+                <p>{{ issues|selectattr('status', 'equalto', 'in_progress')|list|length }}</p>
+            </div>
+        </div>
+
+        <div class="admin-sections">
+            <!-- Pending Issues Section -->
+            <div class="issues-list">
+                <h3>Pending Issues</h3>
+                {% set pending_issues = issues|selectattr('status', 'equalto', 'pending')|list %}
+                {% if pending_issues %}
+                    {% for issue in pending_issues %}
+                        <div class="issue-card">
+                            <div class="issue-header">
+                                <h4>{{ issue.title }}</h4>
+                                <span class="status-badge pending">Pending Review</span>
+                            </div>
+                            <p class="issue-description">{{ issue.description }}</p>
+                            <div class="issue-meta">
+                                <span>Type: {{ issue.type }}</span>
+                                <span>Reported by: {{ issue.author.username }}</span>
+                                <span>Date: {{ issue.created_at.strftime('%Y-%m-%d') }}</span>
+                            </div>
+                            <form method="POST" action="{{ url_for('update_issue', issue_id=issue.id) }}" class="response-form">
+                                <div class="form-group">
+                                    <label for="faculty_response_{{ issue.id }}">Your Response</label>
+                                    <textarea 
+                                        id="faculty_response_{{ issue.id }}" 
+                                        name="faculty_response" 
+                                        class="form-input" 
+                                        required 
+                                        placeholder="Provide your response to this issue"
+                                    ></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="status_{{ issue.id }}">Update Status</label>
+                                    <select id="status_{{ issue.id }}" name="status" class="form-input" required>
+                                        <option value="in_progress">Mark as In Progress</option>
+                                        <option value="resolved">Mark as Resolved</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Response</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <p>No pending issues to review.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- In Progress Issues Section -->
+            <div class="issues-list">
+                <h3>Issues In Progress</h3>
+                {% set in_progress_issues = issues|selectattr('status', 'equalto', 'in_progress')|list %}
+                {% if in_progress_issues %}
+                    {% for issue in in_progress_issues %}
+                        <div class="issue-card">
+                            <div class="issue-header">
+                                <h4>{{ issue.title }}</h4>
+                                <span class="status-badge in_progress">In Progress</span>
+                            </div>
+                            <p class="issue-description">{{ issue.description }}</p>
+                            <div class="issue-meta">
+                                <span>Type: {{ issue.type }}</span>
+                                <span>Reported by: {{ issue.author.username }}</span>
+                                <span>Date: {{ issue.created_at.strftime('%Y-%m-%d') }}</span>
+                            </div>
+                            <div class="faculty-response">
+                                <h5>Your Previous Response:</h5>
+                                <p>{{ issue.faculty_response }}</p>
+                            </div>
+                            <form method="POST" action="{{ url_for('update_issue', issue_id=issue.id) }}" class="response-form">
+                                <div class="form-group">
+                                    <label for="faculty_response_update_{{ issue.id }}">Update Response</label>
+                                    <textarea 
+                                        id="faculty_response_update_{{ issue.id }}" 
+                                        name="faculty_response" 
+                                        class="form-input" 
+                                        required
+                                    >{{ issue.faculty_response }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="status_update_{{ issue.id }}">Update Status</label>
+                                    <select id="status_update_{{ issue.id }}" name="status" class="form-input" required>
+                                        <option value="in_progress" selected>Keep In Progress</option>
+                                        <option value="resolved">Mark as Resolved</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Issue</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <p>No issues currently in progress.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Issue Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h2>Admin Dashboard</h2>
+            <nav>
+                <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container dashboard-container">
+        <div class="welcome-banner">
+            <h3>Welcome, {{ current_user.username }}!</h3>
+            <p>Monitor all system issues and their status</p>
+        </div>
+
+        <div class="admin-stats">
+            <div class="stat-card">
+                <h4>Total Issues</h4>
+                <p>{{ issues|length }}</p>
+            </div>
+            <div class="stat-card">
+                <h4>Pending</h4>
+                <p>{{ issues|selectattr('status', 'equalto', 'pending')|list|length }}</p>
+            </div>
+            <div class="stat-card">
+                <h4>In Progress</h4>
+                <p>{{ issues|selectattr('status', 'equalto', 'in_progress')|list|length }}</p>
+            </div>
+            <div class="stat-card">
+                <h4>Resolved</h4>
+                <p>{{ issues|selectattr('status', 'equalto', 'resolved')|list|length }}</p>
+            </div>
+        </div>
+
+        <div class="admin-sections">
+            <!-- Pending Issues Section -->
+            <div class="issues-list">
+                <h3>Pending Issues</h3>
+                {% set pending_issues = issues|selectattr('status', 'equalto', 'pending')|list %}
+                {% if pending_issues %}
+                    {% for issue in pending_issues %}
+                        <div class="issue-card">
+                            <div class="issue-header">
+                                <h4>{{ issue.title }}</h4>
+                                <span class="status-badge pending">Pending</span>
+                            </div>
+                            <p class="issue-description">{{ issue.description }}</p>
+                            <div class="issue-meta">
+                                <span>Type: {{ issue.type }}</span>
+                                <span>Reported by: {{ issue.author.username }}</span>
+                                <span>Date: {{ issue.created_at.strftime('%Y-%m-%d') }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <p>No pending issues.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- In Progress Issues Section -->
+            <div class="issues-list">
+                <h3>In Progress Issues</h3>
+                {% set in_progress_issues = issues|selectattr('status', 'equalto', 'in_progress')|list %}
+                {% if in_progress_issues %}
+                    {% for issue in in_progress_issues %}
+                        <div class="issue-card">
+                            <div class="issue-header">
+                                <h4>{{ issue.title }}</h4>
+                                <span class="status-badge in_progress">In Progress</span>
+                            </div>
+                            <p class="issue-description">{{ issue.description }}</p>
+                            <div class="issue-meta">
+                                <span>Type: {{ issue.type }}</span>
+                                <span>Reported by: {{ issue.author.username }}</span>
+                                <span>Date: {{ issue.created_at.strftime('%Y-%m-%d') }}</span>
+                            </div>
+                            {% if issue.faculty_response %}
+                                <div class="faculty-response">
+                                    <h5>Faculty Response:</h5>
+                                    <p>{{ issue.faculty_response }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <p>No issues in progress.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Resolved Issues Section -->
+            <div class="issues-list">
+                <h3>Resolved Issues</h3>
+                {% set resolved_issues = issues|selectattr('status', 'equalto', 'resolved')|list %}
+                {% if resolved_issues %}
+                    {% for issue in resolved_issues %}
+                        <div class="issue-card">
+                            <div class="issue-header">
+                                <h4>{{ issue.title }}</h4>
+                                <span class="status-badge resolved">Resolved</span>
+                            </div>
+                            <p class="issue-description">{{ issue.description }}</p>
+                            <div class="issue-meta">
+                                <span>Type: {{ issue.type }}</span>
+                                <span>Reported by: {{ issue.author.username }}</span>
+                                <span>Date: {{ issue.created_at.strftime('%Y-%m-%d') }}</span>
+                            </div>
+                            <div class="faculty-response">
+                                <h5>Faculty Response:</h5>
+                                <p>{{ issue.faculty_response }}</p>
+                                <span class="resolution-date">Resolved on: {{ issue.resolution_date.strftime('%Y-%m-%d') }}</span>
+                            </div>
+                            {% if issue.feedback %}
+                                <div class="feedback-section">
+                                    <h5>Student Feedback</h5>
+                                    <div class="rating-display">
+                                        {% for i in range(issue.feedback.rating) %}★{% endfor %}
+                                        {% for i in range(5 - issue.feedback.rating) %}☆{% endfor %}
+                                    </div>
+                                    <p class="feedback-comment">{{ issue.feedback.comment }}</p>
+                                    <span class="feedback-date">Feedback submitted on: {{ issue.feedback.submitted_at.strftime('%Y-%m-%d') }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <p>No resolved issues.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
