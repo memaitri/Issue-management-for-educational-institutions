@@ -6,7 +6,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key'  # Change this in production
+# Use environment variable for secret key, fallback to a default for development
+import os
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///issues.db'
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
